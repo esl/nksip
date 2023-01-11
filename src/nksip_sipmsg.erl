@@ -175,7 +175,7 @@ metas(Fields, #sipmsg{}=SipMsg) when is_list(Fields) ->
 
 %% @doc Extracts a header from a request or response
 -spec header(string()|binary(), nksip:request()|nksip:response()) ->
-    [binary()].
+    nksip:call_id() | [binary()].
 
 header(Name, SipMsg) when is_list(Name) ->
     header(list_to_binary(Name), SipMsg);
