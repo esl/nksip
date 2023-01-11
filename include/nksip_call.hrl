@@ -161,7 +161,7 @@
 %% - nksip_min_se: Pre-dialog received MinSE header
 
 -record(call, {
-    srv_id :: nkservice:service_id(),
+    srv_id :: nkservice:id(),
     call_id :: nksip:call_id(),
     hibernate :: atom(),
     next :: integer(),

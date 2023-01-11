@@ -94,7 +94,7 @@
 -record(sipmsg, {
     id :: nksip_sipmsg:id(),
     class :: {req, nksip:method()} | {resp, nksip:sip_code(), binary()},
-    srv_id :: nkservice:service_id(),
+    srv_id :: nkservice:id(),
     dialog_id :: nksip_dialog_lib:id(),
     ruri :: nksip:uri(),
     vias = [] :: [nksip:via()],
@@ -171,7 +171,7 @@
 
 -record(dialog, {
     id :: nksip_dialog_lib:id(),
-    srv_id :: nkservice:service_id(),
+    srv_id :: nkservice:id(),
     call_id :: nksip:call_id(),
     created :: nklib_util:timestamp(),
     updated :: nklib_util:timestamp(),
