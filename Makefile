@@ -103,9 +103,9 @@ pbx: app
 		-args_file samples/nksip_pbx/priv/vm.args
 
 build_tests:
-	erlc -pa ebin -pa deps/lager/ebin -pa deps/nklib/ebin -pa deps/nkpacket/ebin \
+	erlc -pa ebin -pa deps/nklib/ebin -pa deps/nkpacket/ebin \
 	-o ebin -I include \
-	+export_all +debug_info +"{parse_transform, lager_transform}" \
+	+export_all +debug_info \
 	test/*.erl
 
 
