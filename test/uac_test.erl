@@ -69,9 +69,9 @@ uac() ->
     {error, {invalid, <<"route">>}} = nksip_uac:options(client2, SipC1, [{route, "<>"}]),
     {error, {invalid, <<"contact">>}} = nksip_uac:options(client2, SipC1, [{contact, "<>"}]),
     {error, {invalid_config, cseq_num}} = nksip_uac:options(client2, SipC1, [{cseq_num, -1}]),
-    % lager:error("Next error about 'unknown_sipapp' is expected"),
+    % logger:error("Next error about 'unknown_sipapp' is expected"),
     {error, service_not_found} = nksip_uac:options(none, SipC1, []),
-    lager:error("Next 2 errors about 'too_many_calls' are expected"),
+    logger:error("Next 2 errors about 'too_many_calls' are expected"),
     nklib_counters:incr(nksip_calls, 1000000000),
     {error, too_many_calls} = nksip_uac:options(client2, SipC1, []),
     nklib_counters:incr(nksip_calls, -1000000000),
@@ -93,7 +93,7 @@ uac() ->
     CB = {callback, Fun},
     Hds = [{add, "x-nk-op", busy}, {add, "x-nk-prov", "true"}],
 
-    lager:info("Next two infos about connection error to port 50600 are expected"),
+    logger:info("Next two infos about connection error to port 50600 are expected"),
     {error, service_unavailable} =
         nksip_uac:options(client2, "<sip:127.0.0.1:50600;transport=tcp>", []),
     
@@ -125,7 +125,7 @@ uac() ->
     {ok, 486, [{call_id, CallId4}, {handle, RespId4}]} = 
         nksip_uac:invite(client2, SipC1, [CB, get_request, {meta, [call_id, handle]}|Hds]),
 
-    % lager:notice("RESPID4: ~p", [RespId4]),
+    % logger:notice("RESPID4: ~p", [RespId4]),
 
 
     {ok, CallId4} = nksip_response:call_id(RespId4),
@@ -193,7 +193,7 @@ timeout() ->
     SipC1 = "sip:127.0.0.1:5070",
     ok = nksip:update(client2, [{sip_timer_t1, 10}, {sip_timer_c, 1}]),
 
-    lager:notice("Next notices about several timeouts are expected"),
+    logger:notice("Next notices about several timeouts are expected"),
 
     {ok, 408, [{reason_phrase, <<"Timer F Timeout">>}]} = 
         nksip_uac:options(client2, "sip:127.0.0.1:9999", [{meta,[reason_phrase]}]),

@@ -81,7 +81,7 @@ wait(Ref, List) ->
                 true -> 
                     wait(Ref, List -- [Term]);
                 false -> 
-                    lager:warning("Timer Test Wait unexpected term: ~p", [Term]),
+                    logger:warning("Timer Test Wait unexpected term: ~p", [Term]),
                     wait(Ref, List)
                     % {error, {unexpected_term, Term, List}}
             end
@@ -96,7 +96,7 @@ log() ->
     log(?LOG_LEVEL).
 
 log(Level) -> 
-    lager:set_loglevel(lager_console_backend, Level).
+    logger:update_primary_config(#{level => Level}).
 
 
 get_ref() ->
@@ -129,10 +129,10 @@ send_ref(Msg, Req) ->
     Dialogs = nkservice:get(SrvId, dialogs, []),
     case lists:keyfind(DialogId, 1, Dialogs) of
         {DialogId, Ref, Pid}=_D -> 
-            % lager:warning("FOUND ~p, ~p", [SrvId, _D]),
+            % logger:warning("FOUND ~p, ~p", [SrvId, _D]),
             Pid ! {Ref, {SrvId:name(), Msg}};
         false ->
-            % lager:warning("NOT FOUND: ~p", [SrvId]),
+            % logger:warning("NOT FOUND: ~p", [SrvId]),
             ok
     end.
 

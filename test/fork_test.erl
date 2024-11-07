@@ -353,7 +353,7 @@ invite2() ->
 
     All = nksip_dialog:get_all(),
 
-    % lager:notice("A")
+    % logger:notice("A")
 
 
     {ok, C2Id} = nkservice_srv:get_srv_id(client2),
@@ -474,7 +474,7 @@ multiple_200() ->
 
     [R1, R2, R3]= nksip_dialog:get_all(serverR, CallId1),
 
-    % lager:notice("R: ~p, ~p, ~p, ~p", [R1, R2, R3, Dlg_C1_1]),
+    % logger:notice("R: ~p, ~p, ~p, ~p", [R1, R2, R3, Dlg_C1_1]),
 
     Dlg_C1_1_SR = nksip_dialog_lib:change_app(Dlg_C1_1, serverR),
     true = lists:member(Dlg_C1_1_SR, [R1, R2, R3]),

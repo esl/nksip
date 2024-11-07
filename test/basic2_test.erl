@@ -225,7 +225,7 @@ sip_route(Scheme, User, Domain, Req, _Call) ->
                 true when Domain =:= <<"nksip">> ->
                     case nksip_registrar:find(server1, Scheme, User, Domain) of
                         [] -> 
-                            % lager:notice("E: ~p, ~p, ~p", [Scheme, User, Domain]),
+                            % logger:notice("E: ~p, ~p, ~p", [Scheme, User, Domain]),
                             {reply, temporarily_unavailable};
                         UriList ->
                          {proxy, UriList, Opts}
@@ -246,7 +246,7 @@ sip_invite(Req, _Call) ->
     case nksip_sipmsg:header(<<"x-nk-op">>, Req) of
         [<<"wait">>] ->
             {ok, ReqId} = nksip_request:get_handle(Req),
-            lager:error("Next error about a looped_process is expected"),
+            logger:error("Next error about a looped_process is expected"),
             {error, looped_process} = nksip_request:reply(ringing, ReqId),
             spawn(
                 fun() ->

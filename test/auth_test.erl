@@ -296,7 +296,7 @@ sip_authorize(Auth, Req, _Call) ->
     IsRegister = lists:member(register, Auth),
     if
         App==server1; App==server2 ->
-            % lager:warning("AUTH AT ~p: ~p", [App, Auth]),
+            % logger:warning("AUTH AT ~p: ~p", [App, Auth]),
             case IsDialog orelse IsRegister of
                 true ->
                     ok;
