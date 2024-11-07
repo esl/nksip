@@ -47,7 +47,7 @@ route(UriList, ProxyOpts, UAS, Call) ->
             [[]] -> throw({reply, temporarily_unavailable});
             UriSet0 -> UriSet0
         end,
-        % lager:warning("URISET: ~p", [UriList]),
+        % logger:warning("URISET: ~p", [UriList]),
         #trans{method=Method} = UAS,
         case SrvId:nks_sip_route(UriSet, ProxyOpts, UAS, Call) of
             {continue, [UriSet1, ProxyOpts1, UAS1, Call1]} ->

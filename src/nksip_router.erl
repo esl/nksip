@@ -188,7 +188,7 @@ handle_call(works, _From, #state{works=Works}=State) ->
     {reply, maps:size(Works), State};
 
 handle_call(Msg, _From, State) -> 
-    lager:error("Module ~p received unexpected call ~p", [?MODULE, Msg]),
+    logger:error("Module ~p received unexpected call ~p", [?MODULE, Msg]),
     {noreply, State}.
 
 
@@ -207,7 +207,7 @@ handle_cast({incoming, SipMsg}, State) ->
     end;
 
 handle_cast(Msg, State) ->
-    lager:error("Module ~p received unexpected event: ~p", [?MODULE, Msg]),
+    logger:error("Module ~p received unexpected event: ~p", [?MODULE, Msg]),
     {noreply, State}.
 
 
@@ -223,7 +223,7 @@ handle_info({sync_work_received, Ref, Pid}, #state{works=Works}=State) ->
             WorkList1 = lists:keydelete(Ref, 1, WorkList),
             maps:put(Pid, {SrvId, CallId, WorkList1}, Works);
         error ->
-            lager:warning("Receiving sync_work_received for unknown work"),
+            logger:warning("Receiving sync_work_received for unknown work"),
             Works
     end,
     {noreply, State#state{works=Works1}};
@@ -233,7 +233,7 @@ handle_info({'DOWN', _MRef, process, Pid, _Reason}, State) ->
     case maps:find(Pid, Srvs) of
         {ok, {SrvId, CallPids}} ->
             % A service is down
-            lager:info("Service ~p (~p) down at ~p. Calls: ~p", 
+            logger:info("Service ~p (~p) down at ~p. Calls: ~p", 
                           [SrvId, SrvId:name(), Name, CallPids]),
             lists:foreach(fun(CallPid) -> gen_server:cast(CallPid, stop) end, CallPids),
             State1 = State#state{services=maps:remove(Pid, Srvs)},
@@ -258,7 +258,7 @@ handle_info({'DOWN', _MRef, process, Pid, _Reason}, State) ->
     end;
 
 handle_info(Info, State) -> 
-    lager:warning("Module ~p received unexpected info: ~p", [?MODULE, Info]),
+    logger:warning("Module ~p received unexpected info: ~p", [?MODULE, Info]),
     {noreply, State}.
 
 

@@ -118,7 +118,7 @@ handle_call(get_data, _From, Call) ->
     {reply, {Trans, Forks, Dialogs}, Call};
  
 handle_call(Msg, _From, Call) ->
-    lager:error("Module ~p received unexpected sync event: ~p", [?MODULE, Msg]),
+    logger:error("Module ~p received unexpected sync event: ~p", [?MODULE, Msg]),
     {noreply, Call}.
 
 
@@ -137,7 +137,7 @@ handle_cast(stop, Call) ->
     {stop, normal, Call};
 
 handle_cast(Msg, Call) ->
-    lager:error("Module ~p received unexpected event: ~p", [?MODULE, Msg]),
+    logger:error("Module ~p received unexpected event: ~p", [?MODULE, Msg]),
     {noreply, Call}.
 
 
@@ -157,18 +157,18 @@ handle_info({timeout, Ref, Type}, Call) ->
 % handle_info({'DOWN', _Ref, process, Pid, _Reason}=Info, #call{srv_id=SrvId}=Call) ->
 %     case whereis(SrvId) of
 %         undefined ->
-%             lager:warning("Srv ~p down1", [SrvId]),
+%             logger:warning("Srv ~p down1", [SrvId]),
 %             {stop, normal, Call};
 %         Pid ->
-%             lager:warning("Srv ~p down2", [SrvId]),
+%             logger:warning("Srv ~p down2", [SrvId]),
 %             {stop, normal, Call};
 %         _ ->
-%             lager:warning("Module ~p received unexpected info: ~p", [?MODULE, Info]),
+%             logger:warning("Module ~p received unexpected info: ~p", [?MODULE, Info]),
 %             next(Call)
 %     end;
 
 handle_info(Info, Call) ->
-    lager:warning("Module ~p received unexpected info: ~p", [?MODULE, Info]),
+    logger:warning("Module ~p received unexpected info: ~p", [?MODULE, Info]),
     {noreply, Call}.
 
 

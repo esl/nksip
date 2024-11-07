@@ -32,9 +32,9 @@
     DO_LOG(Level, Srv, CallId, Text, Opts),
     case CallId of
         <<>> ->
-            lager:Level([{app, Srv}], "~p "++Text, [Srv|Opts]);
-        _ -> 
-            lager:Level([{app, Srv}, {call_id, CallId}], "~p (~s) "++Text, [Srv, CallId|Opts])
+            logger:Level("~p "++Text, [Srv|Opts]);
+        _ ->
+            logger:Level("~p (~s) "++Text, [Srv, CallId|Opts])
     end).
 
 -define(DO_DEBUG(SrvId, CallId, Level, Text, List),
@@ -264,7 +264,7 @@
 % -endif.
 
 % -ifndef(I).
-% -define(I(S,P), lager:info(S++"\n", P)).
+% -define(I(S,P), logger:info(S++"\n", P)).
 % -define(I(S), ?I(S, [])).
 % -endif.
 

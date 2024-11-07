@@ -48,12 +48,12 @@ plugin_config(Config, _Service) ->
 
 
 plugin_start(Config, #{name:=Name}) ->
-    lager:info("Plugin ~p started (~s)", [?MODULE, Name]),
+    logger:info("Plugin ~p started (~s)", [?MODULE, Name]),
     {ok, Config}.
 
 
 plugin_stop(Config, #{name:=Name}) ->
-    lager:info("Plugin ~p stopped (~s)", [?MODULE, Name]),
+    logger:info("Plugin ~p stopped (~s)", [?MODULE, Name]),
     Supported1 = maps:get(sip_supported, Config, []),
     Supported2 = Supported1 -- [<<"outbound">>],
     {ok, Config#{sip_supported=>Supported2}}.

@@ -97,7 +97,7 @@ add_candidates([#sdp_m{attributes=Attrs}=Media|Rest], Index, Candidates, Acc) ->
                     Data = binary:split(FRest, <<" ">>, [global]),
                     [{<<"candidate">>, Data}|FAcc];
                 _ ->
-                    lager:error("L: ~p", [Line]),
+                    logger:error("L: ~p", [Line]),
                     FAcc
             end
         end,

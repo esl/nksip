@@ -40,12 +40,12 @@ plugin_deps() ->
 
 
 plugin_start(Config, #{name:=Name}) ->
-    lager:info("Plugin ~p started (~s)", [?MODULE, Name]),
+    logger:info("Plugin ~p started (~s)", [?MODULE, Name]),
     {ok, Config}.
 
 
 plugin_stop(Config, #{name:=Name}) ->
-    lager:info("Plugin ~p stopped (~s)", [?MODULE, Name]),
+    logger:info("Plugin ~p stopped (~s)", [?MODULE, Name]),
     {ok, Config}.
 
 
