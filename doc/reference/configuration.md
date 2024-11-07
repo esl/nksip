@@ -36,8 +36,7 @@ tls_depth|`integer()`|0|TLS check depth
 
 Name|Type|Default|Comments
 ---|---|---|---
-log_path|`string`|"./log"|Directory for NkSERVICE files (you must configure lager also)
-log_level|`debug`&#124;`info`&#124;`notice`&#124;`warning`&#124;`error`|`notice`|Current global log level
+log_path|`string`|"./log"|Directory for NkSERVICE files (used for cache)
 
 
 ### nksip
@@ -67,10 +66,6 @@ sip_max_calls|`integer()`|100000|Maximum number of simultaneous calls (for each 
 sip_local_host|auto&#124;`string()`&#124;`binary()`&#124;|auto|Default host or IP to use in headers like _Via_, _Contact_ and _Record-Route_. If set to `auto` NkSIP will use the IP of the transport selected in every case. If that transport is listening on all addresses NkSIP will try to find the best IP using the first valid IP among the network interfaces `ethX` and `enX`, or localhost if none is found
 sip_local_host6|auto&#124;`string()`&#124;`binary()`|auto|Default host or IP to use in headers like _Via_, _Contact_ and _Record-Route_ for IPv6 transports. See `local_host` option
 sip_udp_max_size|`integer()`|65507|Maximum UDP packet size. Bigger packets will be sent using TCP
-
-### lager
-
-See specific lager configuration
 
 
 ## Service Configuration
