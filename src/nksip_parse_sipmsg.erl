@@ -49,7 +49,7 @@ parse(Bin) ->
         {ok, Class, Headers, Rest2}
     catch
         throw:{line, _Line} -> 
-            % lager:error("LINE: ~p", [_Line]),
+            % logger:error("LINE: ~p", [_Line]),
             error
     end.
 

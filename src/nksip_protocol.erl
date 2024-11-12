@@ -137,7 +137,7 @@ naptr(_, _) -> invalid.
     {ok, conn_state()} | {stop, term()}.
 
 conn_init(_NkPort) ->
-    % lager:warning("CONN INIT ~p: ~p (~p)", [SrvId:name(), P, self()]),
+    % logger:warning("CONN INIT ~p: ~p (~p)", [SrvId:name(), P, self()]),
     State = #conn_state{
         rnrn_pattern = binary:compile_pattern(<<"\r\n\r\n">>)
     },
@@ -226,7 +226,7 @@ conn_handle_call(get_refresh, From, _NkPort, State) ->
 
 
 conn_handle_call(Msg, _From, _NkPort, State) ->
-    lager:error("Module ~p received unexpected call: ~p", [?MODULE, Msg]),
+    logger:error("Module ~p received unexpected call: ~p", [?MODULE, Msg]),
     {ok, State}.
 
 
@@ -245,7 +245,7 @@ conn_handle_cast(stop_refresh, _NkPort, State) ->
     {ok, State1};
 
 conn_handle_cast(Msg, _NkPort, State) ->
-    lager:error("Module ~p received unexpected cast: ~p", [?MODULE, Msg]),
+    logger:error("Module ~p received unexpected cast: ~p", [?MODULE, Msg]),
     {ok, State}.
 
 
@@ -290,7 +290,7 @@ conn_handle_info({stun, {ok, StunIp, StunPort}}, NkPort, State) ->
         true ->
             case RefreshTime of
                 undefined ->
-                    lager:warning("STUN UNDEFINED: ~p", [self()]);
+                    logger:warning("STUN UNDEFINED: ~p", [self()]);
                 _ ->
                     ok
             end,
@@ -312,7 +312,7 @@ conn_handle_info({stun, error}, _NkPort, State) ->
     {stop, stun_error, State};
 
 conn_handle_info(Msg, _NkPort, State) ->
-    lager:warning("Module ~p received unexpected info: ~p", [?MODULE, Msg]),
+    logger:warning("Module ~p received unexpected info: ~p", [?MODULE, Msg]),
     {ok, State}.
 
 

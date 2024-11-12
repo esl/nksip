@@ -401,7 +401,7 @@ parse_sipmsg(SipMsg, Headers) ->
     end,
     Contacts = case nklib_parse:uris(proplists:get_all_values(<<"contact">>, Hds2)) of
         error -> 
-            lager:warning("C: ~p", [Hds2]),
+            logger:warning("C: ~p", [Hds2]),
             throw({invalid, <<"Contact">>});
         Contacts0 -> Contacts0
     end,

@@ -80,7 +80,7 @@ sip_get_user_pass(_User, _Realm, _Req, _Call) ->
 
 sip_authorize(Auth, Req, _Call) ->
     {ok, Method} = nksip_request:method(Req),
-    lager:info("Request ~p auth data: ~p", [Method, Auth]),
+    logger:info("Request ~p auth data: ~p", [Method, Auth]),
     case lists:member(dialog, Auth) orelse lists:member(register, Auth) of
         true -> 
             ok;
@@ -163,27 +163,27 @@ sip_route(_Scheme, _User, _Domain, Req, _Call) ->
 
 sip_dialog_update(Status, Dialog, _Call) ->
     {ok, DialogId} = nksip_dialog:get_handle(Dialog),
-    lager:notice("PBX Dialog ~s Update: ~p", [DialogId, Status]),
+    logger:notice("PBX Dialog ~s Update: ~p", [DialogId, Status]),
     ok.
 
 
 sip_session_update({start, LocalSDP, RemoteSDP}, Dialog, _Call) ->
     {ok, DialogId} = nksip_dialog:get_handle(Dialog),
-    lager:notice("PBX Session ~s Start", [DialogId]),
-    lager:notice("Local SDP: ~s", [nksip_sdp:unparse(LocalSDP)]),
-    lager:notice("Remote SDP: ~s", [nksip_sdp:unparse(RemoteSDP)]),
+    logger:notice("PBX Session ~s Start", [DialogId]),
+    logger:notice("Local SDP: ~s", [nksip_sdp:unparse(LocalSDP)]),
+    logger:notice("Remote SDP: ~s", [nksip_sdp:unparse(RemoteSDP)]),
     ok;
 
 sip_session_update({update, LocalSDP, RemoteSDP}, Dialog, _Call) ->
     {ok, DialogId} = nksip_dialog:get_handle(Dialog),
-    lager:notice("PBX Session ~s Update", [DialogId]),
-    lager:notice("Local SDP: ~s", [nksip_sdp:unparse(LocalSDP)]),
-    lager:notice("Remote SDP: ~s", [nksip_sdp:unparse(RemoteSDP)]),
+    logger:notice("PBX Session ~s Update", [DialogId]),
+    logger:notice("Local SDP: ~s", [nksip_sdp:unparse(LocalSDP)]),
+    logger:notice("Remote SDP: ~s", [nksip_sdp:unparse(RemoteSDP)]),
     ok;
 
 sip_session_update(Status, Dialog, _Call) ->
     {ok, DialogId} = nksip_dialog:get_handle(Dialog),
-    lager:notice("PBX Session ~s Update: ~p", [DialogId, Status]),
+    logger:notice("PBX Session ~s Update: ~p", [DialogId, Status]),
     ok.
 
 

@@ -69,7 +69,7 @@ handle_call(get_uas_avg, _From, #state{last_uas=LastUas}=State) ->
     {reply, LastUas, State, timeout(State)};
 
 handle_call(Msg, _From, State) -> 
-    lager:error("Module ~p received unexpected call ~p", [?MODULE, Msg]),
+    logger:error("Module ~p received unexpected call ~p", [?MODULE, Msg]),
     {noreply, State, timeout(State)}.
 
 
@@ -82,7 +82,7 @@ handle_cast({response_time, Time}, #state{avg_uas_values=Values}=State) ->
     {noreply, State1, timeout(State1)};
 
 handle_cast(Msg, State) -> 
-    lager:error("Module ~p received unexpected cast ~p", [?MODULE, Msg]),
+    logger:error("Module ~p received unexpected cast ~p", [?MODULE, Msg]),
     {noreply, State, timeout(State)}.
 
 
@@ -97,7 +97,7 @@ handle_info(timeout, #state{avg_uas_values=Values, period=Period}=State) ->
     {noreply, State1, 1000*Period};
 
 handle_info(Info, State) -> 
-    lager:warning("Module ~p received unexpected info: ~p", [?MODULE, Info]),
+    logger:warning("Module ~p received unexpected info: ~p", [?MODULE, Info]),
     {noreply, State, timeout(State)}.
 
 

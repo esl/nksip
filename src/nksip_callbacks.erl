@@ -99,7 +99,7 @@ plugin_listen(Data, #{id:=Id, config_nksip:=Config}) ->
 
 plugin_start(Config, #{name:=Name}) ->
 	ok = nksip_app:start(),
-    lager:info("Plugin nksip started for service ~s", [Name]),
+    logger:info("Plugin nksip started for service ~s", [Name]),
     {ok, Config}.
 
 
@@ -107,7 +107,7 @@ plugin_start(Config, #{name:=Name}) ->
     {ok, nkservice:service()} | {stop, term()}.
 
 plugin_stop(Config, #{name:=Name}) ->
-    lager:info("Plugin nksip stopped for service ~s", [Name]),
+    logger:info("Plugin nksip stopped for service ~s", [Name]),
     {ok, Config}.
 
 

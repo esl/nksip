@@ -50,17 +50,17 @@ plugin_syntax() ->
 plugin_config(Config, #{name:=Name}) ->
     Tries = maps:get(sip_uac_auto_auth_max_tries, Config, 5),
     Pass = maps:get(sip_pass, Config, []),
-    lager:info("Plugin ~p started (~s)", [?MODULE, Name]),
+    logger:info("Plugin ~p started (~s)", [?MODULE, Name]),
     {ok, Config, nksip_uac_auto_auth:make_config(Tries, Pass)}.
 
 
 plugin_start(Config, #{name:=Name}) ->
-    lager:info("Plugin ~p started (~s)", [?MODULE, Name]),
+    logger:info("Plugin ~p started (~s)", [?MODULE, Name]),
     {ok, Config}.
 
 
 plugin_stop(Config, #{name:=Name}) ->
-    lager:info("Plugin ~p stopped (~s)", [?MODULE, Name]),
+    logger:info("Plugin ~p stopped (~s)", [?MODULE, Name]),
     {ok, Config}.
 
 

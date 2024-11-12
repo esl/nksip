@@ -520,7 +520,7 @@ uac_auto() ->
     false = nksip_protocol:get_refresh(Pid3),
     false = nksip_protocol:get_refresh(Pid4),
 
-    % lager:error("Next error about process failed is expected"),
+    % logger:error("Next error about process failed is expected"),
     exit(Pid1, kill),
     timer:sleep(50),
     [{auto1, false, _},{auto2, true, _}] = 
@@ -558,7 +558,7 @@ check_time(Time, Limit) ->
         true ->
             ok;
         false ->
-            lager:warning("Time error ~p not int ~p", [Time, Limit]),
+            logger:warning("Time error ~p not int ~p", [Time, Limit]),
             error(time_error)
     end.
 

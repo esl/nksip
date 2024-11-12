@@ -1,6 +1,6 @@
 # Logging Options
 
-NkSIP uses [Lager](https://github.com/basho/lager) for logging, supporting multiple log levels, log rotation, etc. The following `Lager` levels are used:
+NkSIP uses [logger](https://www.erlang.org/doc/apps/kernel/logger.html) for logging, supporting multiple log levels, log rotation, etc. The following `logger` levels are used:
 
 Level|Typical use
 ---|---
@@ -13,10 +13,6 @@ Level|Typical use
 `alert`|Not used currently
 `emergency`|Not used currently
 
-You can configure Lager using its erlang environment variables, or using an erlang start up configuration file (usually called `app.config`). See the `samples` directory for an example of use.
-
-Lager supports several backends, typically console and disk. You can change the current _log level_ with `lager:set_loglevel/2,3` (for example `lager:set_loglevel(lager_console_backend, debug)` and `lager:set_loglevel(lager_file_backend, "console.log", debug)`).
-
-In order for a Service to change its log level, not only the global log level must be changed, but also the [application configuration](configuration.md), using the `log_level` option. Service config options can be changed on the fly.
+You can configure logger using its erlang environment variables, or using an erlang start up configuration file (usually called `app.config`). See the `samples` directory for an example of use.
 
 To get SIP message tracing, activate the [nksip_trace](../plugins/trace.md) plugin.

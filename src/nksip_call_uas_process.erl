@@ -134,7 +134,7 @@ check_missing_dialog(Method, _Req, UAS, #call{srv_id=SrvId}=Call) ->
     nksip_call:call().
 
 dialog(Method, Req, UAS, Call) ->
-    % lager:error("DIALOG: ~p\n~p\n~p\n~p", [Method, Req, UAS, Call]),
+    % logger:error("DIALOG: ~p\n~p\n~p\n~p", [Method, Req, UAS, Call]),
     #sipmsg{to={_, ToTag}} = Req,
     #trans{id=Id, opts=Opts, stateless=Stateless} = UAS,
     case Stateless orelse ToTag == <<>> of
@@ -227,7 +227,7 @@ call_user_sip_method(#trans{method=Method, request=Req}=UAS, #call{srv_id=SrvId}
 %     nksip_call:call().
 
 % dialog(Method, Req, UAS, Call) ->
-%     % lager:error("DIALOG: ~p\n~p\n~p\n~p", [Method, Req, UAS, Call]),
+%     % logger:error("DIALOG: ~p\n~p\n~p\n~p", [Method, Req, UAS, Call]),
 %     #sipmsg{to={_, ToTag}} = Req,
 %     #trans{id=Id, opts=Opts, stateless=Stateless} = UAS,
 %     #call{srv_id=SrvId} = Call,

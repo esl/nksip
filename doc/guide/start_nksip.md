@@ -14,7 +14,7 @@ If you want to embed NkSIP in your own Erlang application, and you are using _re
 ]}.
 ```
  
-Then you will have to setup in your erlang environment any [configuration parameter](../reference/configuration.md) you want to change from NkSIP's defaults (usually in your `app.config` file), for `nksip` but also some dependant applications like `nkservice`, `nkpacket` or `lager`. You can then start NkSIP starting all dependencies (see [nksip.app.src](../../src/nksip.app.src)) and finally start `nksip` Erlang application.
+Then you will have to setup in your erlang environment any [configuration parameter](../reference/configuration.md) you want to change from NkSIP's defaults (usually in your `app.config` file), for `nksip` but also some dependant applications like `nkservice` or `nkpacket`. You can then start NkSIP starting all dependencies (see [nksip.app.src](../../src/nksip.app.src)) and finally start `nksip` Erlang application.
 
 
 

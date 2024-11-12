@@ -43,7 +43,7 @@
 uac_pre_request(#sipmsg{class={req, 'NOTIFY'}}=Req, Dialog, _Call) ->
     case nksip_subscription_lib:find(Req, Dialog) of
         not_found ->  
-            % lager:warning("PRE REQ: ~p, ~p", 
+            % logger:warning("PRE REQ: ~p, ~p", 
             %         [nksip_subscription_lib:make_id(Req), Dialog#dialog.subscriptions]),
             {error, no_transaction};
         #subscription{class=uas} -> 
