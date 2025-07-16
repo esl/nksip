@@ -27,6 +27,7 @@
 -export([start/0, start/2, stop/1]).
 -export([get/1, get/2, put/2, del/1]).
 -export([profile_output/0]).
+-export([re_call_id/0, re_content_length/0]).
 
 -include("nksip.hrl").
 
@@ -43,7 +44,7 @@
 %% ===================================================================
 
 %% @doc Starts NkSIP stand alone.
--spec start() -> 
+-spec start() ->
     ok | {error, Reason::term()}.
 
 start() ->
@@ -72,18 +73,16 @@ start(_Type, _Args) ->
     case nklib_config:load_env(?APP, Syntax, Defaults) of
         {ok, Parsed} ->
             put(global_id, nklib_util:luid()),
-            {ok, ReCallId} = re:compile(?RE_CALL_ID, [caseless]),
-            put(re_call_id, ReCallId),
-            {ok, ReCL} = re:compile(?RE_CONTENT_LENGTH, [caseless]),
-            put(re_content_length, ReCL),
+            put(re_call_id_src, ?RE_CALL_ID),
+            put(re_content_length_src, ?RE_CONTENT_LENGTH),
             ServiceKeys = maps:keys(ServiceSyntax),
             ServiceDefaults = nklib_util:extract(Parsed, ServiceKeys),
             put(sip_defaults, ServiceDefaults),
             CacheKeys = [
-                global_id, re_call_id, re_content_length, sip_defaults 
+                global_id, sip_defaults
                 | maps:keys(nksip_syntax:app_syntax())],
             DataPath = nkservice_app:get(log_path),
-            nklib_config:make_cache(CacheKeys, ?APP, none, 
+            nklib_config:make_cache(CacheKeys, ?APP, none,
                                     nksip_config_cache, DataPath),
             ok = nkpacket:register_protocol(sip, nksip_protocol),
             ok = nkpacket:register_protocol(sips, nksip_protocol),
@@ -123,8 +122,31 @@ put(Key, Value) ->
 del(Key) ->
     nklib_config:del(?APP, Key).
 
+
+re_call_id() ->
+    case persistent_term:get({?MODULE, re_call_id}, undefined) of
+        undefined ->
+            Pat = nksip_app:get(re_call_id_src, ?RE_CALL_ID),
+            {ok, MP} = re:compile(Pat, [caseless]),
+            persistent_term:put({?MODULE, re_call_id}, MP),
+            MP;
+        MP ->
+            MP
+    end.
+
+re_content_length() ->
+    case persistent_term:get({?MODULE, re_content_length}, undefined) of
+        undefined ->
+            Pat = nksip_app:get(re_content_length_src, ?RE_CONTENT_LENGTH),
+            {ok, MP} = re:compile(Pat, [caseless]),
+            persistent_term:put({?MODULE, re_content_length}, MP),
+            MP;
+        MP ->
+            MP
+    end.
+
 %% @private
--spec profile_output() -> 
+-spec profile_output() ->
     ok.
 
 profile_output() ->
