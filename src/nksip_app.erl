@@ -73,8 +73,6 @@ start(_Type, _Args) ->
     case nklib_config:load_env(?APP, Syntax, Defaults) of
         {ok, Parsed} ->
             put(global_id, nklib_util:luid()),
-            put(re_call_id_src, ?RE_CALL_ID),
-            put(re_content_length_src, ?RE_CONTENT_LENGTH),
             ServiceKeys = maps:keys(ServiceSyntax),
             ServiceDefaults = nklib_util:extract(Parsed, ServiceKeys),
             put(sip_defaults, ServiceDefaults),
@@ -126,8 +124,7 @@ del(Key) ->
 re_call_id() ->
     case persistent_term:get({?MODULE, re_call_id}, undefined) of
         undefined ->
-            Pat = nksip_app:get(re_call_id_src, ?RE_CALL_ID),
-            {ok, MP} = re:compile(Pat, [caseless]),
+            {ok, MP} = re:compile(?RE_CALL_ID, [caseless]),
             persistent_term:put({?MODULE, re_call_id}, MP),
             MP;
         MP ->
@@ -137,8 +134,7 @@ re_call_id() ->
 re_content_length() ->
     case persistent_term:get({?MODULE, re_content_length}, undefined) of
         undefined ->
-            Pat = nksip_app:get(re_content_length_src, ?RE_CONTENT_LENGTH),
-            {ok, MP} = re:compile(Pat, [caseless]),
+            {ok, MP} = re:compile(?RE_CONTENT_LENGTH, [caseless]),
             persistent_term:put({?MODULE, re_content_length}, MP),
             MP;
         MP ->
