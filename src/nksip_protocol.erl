@@ -146,7 +146,7 @@ conn_init(_NkPort) ->
 
 %% @doc This function is called when a new message arrives to the connection
 -spec conn_parse(nkpacket:incoming()|close, nkpacket:nkport(), conn_state()) ->
-    {ok, conn_state()} | {bridge, nkpacket:nkport()} | 
+    {ok, conn_state()} | {bridge, nkpacket:nkport()} |
     {stop, Reason::term(), conn_state()}.
 
 conn_parse(close, _NkPort, State) ->
@@ -164,9 +164,9 @@ conn_parse(Binary, NkPort, #conn_state{buffer=Buffer}=State) ->
         _ -> <<Buffer/binary, Binary/binary>>
     end,
     case do_parse(Data, NkPort, State) of
-        {ok, State1} -> 
+        {ok, State1} ->
             {ok, State1};
-        {error, Error} -> 
+        {error, Error} ->
             {stop, Error, State}
     end.
 
@@ -209,16 +209,16 @@ conn_handle_call({start_refresh, Secs, Ref, Pid}, From, NkPort, State) ->
 
 conn_handle_call(get_refresh, From, _NkPort, State) ->
     #conn_state{
-        in_refresh = InRefresh, 
-        refresh_timer = RefreshTimer, 
+        in_refresh = InRefresh,
+        refresh_timer = RefreshTimer,
         refresh_time = RefreshTime
     } = State,
     Reply = case InRefresh of
-        true -> 
+        true ->
             {true, 0, round(RefreshTime/1000)};
-        false when is_reference(RefreshTimer) -> 
+        false when is_reference(RefreshTimer) ->
             {true, round(erlang:read_timer(RefreshTimer)/1000), round(RefreshTime/1000)};
-        false -> 
+        false ->
             false
     end,
     gen_server:reply(From, Reply),
@@ -238,7 +238,7 @@ conn_handle_cast(stop_refresh, _NkPort, State) ->
     #conn_state{refresh_timer=RefreshTimer} = State,
     nklib_util:cancel_timer(RefreshTimer),
     State1 = State#conn_state{
-        in_refresh = false, 
+        in_refresh = false,
         refresh_time = undefined,
         refresh_timer = undefined
     },
@@ -268,22 +268,22 @@ conn_handle_info({timeout, _, refresh}, #nkport{transp=udp}=NkPort, State) ->
 conn_handle_info({timeout, _, refresh}, #nkport{class={nksip, SrvId}}=NkPort, State) ->
     ?debug(SrvId, <<>>, "transport sending refresh", []),
     case do_send(<<"\r\n\r\n">>, NkPort) of
-        ok -> 
+        ok ->
             {ok, State#conn_state{in_refresh=true, refresh_timer=undefined}};
-        {error, _} -> 
+        {error, _} ->
             {stop, send_error, State}
     end;
 
 conn_handle_info({stun, {ok, StunIp, StunPort}}, NkPort, State) ->
     #nkport{class={nksip, SrvId}} = NkPort,
     #conn_state{
-        nat_ip = NatIp, 
-        nat_port = NatPort, 
+        nat_ip = NatIp,
+        nat_port = NatPort,
         refresh_time = RefreshTime,
         refresh_notify = RefreshNotify
     } = State,
     ?debug(SrvId, <<>>, "transport received STUN", []),
-    case 
+    case
         {NatIp, NatPort} == {undefined, undefined} orelse
         {NatIp, NatPort} == {StunIp, StunPort}
     of
@@ -342,46 +342,46 @@ do_parse(<<>>, _NkPort, State) ->
     {ok, State#conn_state{buffer = <<>>}};
 
 %% For TCP and UDP, we send a \r\n\r\n, remote must reply with \r\n
-do_parse(<<"\r\n\r\n", Rest/binary>>, 
-         #nkport{class={nksip, SrvId}, transp=Transp}=NkPort, State) 
+do_parse(<<"\r\n\r\n", Rest/binary>>,
+         #nkport{class={nksip, SrvId}, transp=Transp}=NkPort, State)
          when Transp==tcp; Transp==udp; Transp==tls; Transp==sctp ->
     ?debug(SrvId, <<>>, "transport responding to refresh", []),
     case do_send(<<"\r\n">>, NkPort) of
-        ok -> 
+        ok ->
             do_parse(Rest, NkPort, State);
-        {error, _} -> 
+        {error, _} ->
             {error, send_error}
     end;
 
 do_parse(<<"\r\n">>, #nkport{transp=udp}, State) ->
     {ok, State};
 
-do_parse(<<"\r\n", Rest/binary>>, #nkport{transp=Transp}=NkPort, State) 
+do_parse(<<"\r\n", Rest/binary>>, #nkport{transp=Transp}=NkPort, State)
         when Transp==tcp; Transp==tls; Transp==sctp ->
     #nkport{class={nksip, SrvId}} = NkPort,
     #conn_state{
-        refresh_notify = RefreshNotify, 
+        refresh_notify = RefreshNotify,
         refresh_time = RefreshTime,
         in_refresh = InRefresh
     } = State,
     lists:foreach(fun({Ref, Pid}) -> Pid ! Ref end, RefreshNotify),
     RefreshTimer = case InRefresh of
-        true -> 
-            ?debug(SrvId, <<>>, "transport received refresh, next in ~p secs", 
+        true ->
+            ?debug(SrvId, <<>>, "transport received refresh, next in ~p secs",
                         [round(RefreshTime/1000)]),
             erlang:start_timer(RefreshTime, self(), refresh);
-        false -> 
+        false ->
             undefined
     end,
     State1 = State#conn_state{
-        in_refresh = false, 
+        in_refresh = false,
         refresh_timer = RefreshTimer,
         refresh_notify = [],
         buffer = Rest
     },
     do_parse(Rest, NkPort, State1);
 
-do_parse(Data, #nkport{class={nksip, SrvId}, transp=Transp}, _State) 
+do_parse(Data, #nkport{class={nksip, SrvId}, transp=Transp}, _State)
         when (Transp==tcp orelse Transp==tls) andalso byte_size(Data) > ?MAX_MSG ->
     ?warning(SrvId, <<>>, "dropping TCP/TLS closing because of max_buffer", []),
     {error, msg_too_large};
@@ -407,10 +407,10 @@ do_parse(SrvId, #nkport{transp=Transp}=NkPort, Data, Pos, State) ->
     case extract(Transp, Data, Pos) of
         {ok, CallId, Msg, Rest} ->
             case nksip_router:incoming_sync(SrvId, CallId, NkPort, Msg) of
-                ok -> 
+                ok ->
                     do_parse(Rest, NkPort, State);
-                {error, Error} -> 
-                    ?notice(SrvId, <<>>, 
+                {error, Error} ->
+                    ?notice(SrvId, <<>>,
                             "error processing ~p request: ~p", [Transp, Error]),
                     {error, Error}
             end;
@@ -430,13 +430,13 @@ do_parse(SrvId, #nkport{transp=Transp}=NkPort, Data, Pos, State) ->
     {ok, nksip:call_id(), binary(), binary()} | partial | {error, binary()}.
 
 extract(Transp, Data, Pos) ->
-    case 
-        re:run(Data, nksip_config_cache:re_call_id(), 
+    case
+        re:run(Data, nksip_app:re_call_id(),
                [{capture, all_but_first, binary}])
     of
         {match, [_, CallId]} ->
-            case 
-                re:run(Data, nksip_config_cache:re_content_length(), 
+            case
+                re:run(Data, nksip_app:re_content_length(),
                        [{capture, all_but_first, list}])
             of
                 {match, [_, CL0]} ->
@@ -446,7 +446,7 @@ extract(Transp, Data, Pos) ->
                             case byte_size(Data) of
                                 MsgSize ->
                                     {ok, CallId, Data, <<>>};
-                                BS when BS<MsgSize andalso 
+                                BS when BS<MsgSize andalso
                                         (Transp==tcp orelse Transp==tls) ->
                                     partial;
                                 BS when BS<MsgSize ->
